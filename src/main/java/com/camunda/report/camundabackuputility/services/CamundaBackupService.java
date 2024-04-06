@@ -1,5 +1,6 @@
 package com.camunda.report.camundabackuputility.services;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -26,6 +27,12 @@ public class CamundaBackupService {
 
 	@Autowired
 	RestHelperService restHelperService;
+	
+	@Value("${startDate}")
+	private String endDateAfter;
+
+	@Value("${endDate}")
+	private String endDateBefore;
 
 	/*
 
@@ -113,7 +120,9 @@ public class CamundaBackupService {
 			Object jsonObject = objectMapper.readValue(data, Object.class);
 			String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
 
-			FileWriter fileWriter = new FileWriter(fileStoragePath + instanceID + ".txt");
+			File file = new File(fileStoragePath+endDateAfter+" - "+endDateBefore+"\\" + instanceID + ".txt");
+			file.getParentFile().mkdirs();
+			FileWriter fileWriter = new FileWriter(file);
 			fileWriter.write(prettyJson);
 			fileWriter.flush();
 			fileWriter.close();
@@ -122,6 +131,8 @@ public class CamundaBackupService {
 
 		} catch (IOException e) {
 
+			e.printStackTrace();
+			
 			System.out.println("File creation failed for : " + instanceID);
 
 			throw new IOException();

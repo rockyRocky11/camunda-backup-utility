@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestHelperService {
 
-	@Value("${endDateAfter}")
+	@Value("${startDate}")
 	private String endDateAfter;
 
-	@Value("${endDateBefore}")
+	@Value("${endDate}")
 	private String endDateBefore;
 
 	public String prepareProcessInstancesTotalCountPayload(JSONArray searchAfterJsonArray) {
@@ -23,6 +23,7 @@ public class RestHelperService {
 		queryJSON.put("finished", true);
 		queryJSON.put("canceled", true);
 		queryJSON.put("endDateBefore", endDateBefore + "T23:59:59.000-0400");
+		queryJSON.put("endDateAfter", endDateAfter + "T00:00:00.000-0400");
 
 		JSONObject sortingJSON = new JSONObject();
 		sortingJSON.put("sortBy", "startDate");
